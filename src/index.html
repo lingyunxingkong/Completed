@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  
+</head>
+<body>
+  <div id="myDiv">宽度</div>
+  <script>
+    var xmlhttp;
+    console.log('dsff');
+    xmlhttp=new XMLHttpRequest();
+    /* if (window.XMLHttpRequest)
+    {
+      //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+      xmlhttp=new XMLHttpRequest();
+    }
+    else
+    {
+      // IE6, IE5 浏览器执行代码
+      xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+    } */
+    xmlhttp.onreadystatechange=function()
+    {
+      if (xmlhttp.readyState==4 && xmlhttp.status==200)
+      {
+        document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+        let aee = xmlhttp.responseText
+        let res = JSON.parse(aee)
+        // debugger
+        console.log(aee);
+        console.log(res);
+        console.log('dsff');
+      }
+    }
+    xmlhttp.open("GET","http://localhost:8080/api/list.php",true);
+    xmlhttp.send();
+  </script>
+</body>
+</html>
