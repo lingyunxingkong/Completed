@@ -2,7 +2,6 @@
 <!-- table组件 -->
   <div class="body">
     <div class="top">
-
     </div>
     <div class="bottom">
       <el-table
@@ -30,7 +29,6 @@
             <div v-if="item.prop === 'operation'" >
               <slot  :rowData="scope.row"></slot>
             </div>
-            <img v-if="item.prop === 'image'" :src="scope.row.src" class="image" />
           </template>
         </el-table-column>
       </el-table>
