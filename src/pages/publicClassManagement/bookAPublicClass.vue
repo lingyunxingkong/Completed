@@ -194,7 +194,9 @@
     methods:{
       selectPage() {
         let data = {
-          name:'张林健',
+          teacher: "",
+          course: "",
+          site: "",
         }
         inquireManagement(data).then(res=>{
           this.tableDataLin = res

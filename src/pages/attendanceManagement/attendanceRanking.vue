@@ -194,8 +194,13 @@
       },
       selectPage() {
 
-        inquireStatisticalAnalysis().then(res=>{
-          let data = res
+        let data = {
+          teacher: "",
+          course: "",
+          site: "",
+        }
+        inquireStatisticalAnalysis(data).then(res=>{
+          let arr = res
 
           // 柱状图清空
           this.getHistogramData.yAxis.data = []
@@ -203,7 +208,7 @@
 
           // 饼图清空
           this.getPieChartData.series[0].data = []
-          data.forEach(i=> {
+          arr.forEach(i=> {
             // 柱状图赋值
             this.getHistogramData.yAxis.data.push(i.teacher)
             this.getHistogramData.series[0].data.push(i.rate)

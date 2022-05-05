@@ -141,9 +141,7 @@
     },
     mounted() {
       this.selectPage()
-      this.selectPage2()
-      this.selectPage3()
-      this.selectPage4()
+
       // 下面两行用于没开服务器时 代替的假数据
       let data  = JSON.parse(
         JSON.stringify([
@@ -198,7 +196,9 @@
     methods:{
       selectPage() {
         let data = {
-          name:'张林健',
+          teacher: "",
+          course: "",
+          site: "",
         }
         inquireManagement(data).then(res=>{
           this.tableDataLin = res
@@ -206,36 +206,7 @@
           console.log(err)
         })
       },
-      selectPage2() {
-        let data = {
-          name:'张林健',
-        }
-        inquireAttendance(data).then(res=>{
-          // this.tableDataLin = res
-        }).catch(err => {
-          console.log(err)
-        })
-      },
-      selectPage3() {
-        let data = {
-          name:'张林健',
-        }
-        inquireStatisticalAnalysis(data).then(res=>{
-          // this.tableDataLin = res
-        }).catch(err => {
-          console.log(err)
-        })
-      },
-      selectPage4() {
-        let data = {
-          name:'张林健',
-        }
-        inquirePersonalCenter(data).then(res=>{
-          // this.tableDataLin = res
-        }).catch(err => {
-          console.log(err)
-        })
-      },
+
 
       // 新增
       toAdd() {

@@ -82,7 +82,9 @@
     methods:{
       selectPage() {
         let data = {
-          name:'张林健',
+          teacher: "",
+          course: "",
+          site: "",
         }
         inquireStatisticalAnalysis(data).then(res=>{
           let data = res

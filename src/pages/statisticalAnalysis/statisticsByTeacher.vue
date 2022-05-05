@@ -105,13 +105,18 @@
     },
     methods:{
       selectPage() {
-        inquireStatisticalAnalysis().then(res=>{
+        let data = {
+          teacher: "",
+          course: "",
+          site: "",
+        }
+        inquireStatisticalAnalysis(data).then(res=>{
           this.textData = res[res.length - 1].rate + '%'
           this.myNameData = res[res.length - 1].teacher
-          let data = res
+          let arr = res
           // 清空
           this.nightingaleData.series[0].data = []
-          data.forEach(i=> {
+          arr.forEach(i=> {
             // 饼图赋值
             this.nightingaleData.series[0].data.push({
               value:i.rate,
