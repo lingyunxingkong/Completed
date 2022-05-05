@@ -22,6 +22,10 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 
+// 引入icon
+import iconfontSvg from "./components/iconfont.vue";
+Vue.component("iconfont-svg",iconfontSvg)
+
 new Vue({
   render: h => h(App),
   router
