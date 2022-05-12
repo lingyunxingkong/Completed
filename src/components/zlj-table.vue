@@ -1,7 +1,11 @@
 <template>
 <!-- table组件 -->
   <div class="body">
-    <div class="top">
+    <div class="top" >
+
+      <slot name="form">
+      </slot>
+
     </div>
     <div class="bottom">
       <el-table
@@ -55,6 +59,7 @@
 <script>
   export default {
     name: "zlj-table",
+
     props: {
       height:{
         type:Number,

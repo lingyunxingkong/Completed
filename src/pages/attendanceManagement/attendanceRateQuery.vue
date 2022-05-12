@@ -11,6 +11,25 @@
         @handleSizeChange="handleSize"
         @handleCurrentChange="handleCurrent"
       >
+        <template v-slot:form>
+          <div class="my-form">
+            <span class="text">地点:</span>
+            <el-select v-model="mySite" clearable class="mt-input" size="small" placeholder="请选择">
+              <el-option
+                v-for="item in siteList"
+                :key="item.value"
+                :value="item.value">
+              </el-option>
+            </el-select>
+            <span class="text">课程:</span>
+            <el-input v-model="myCourse" class="mt-input" size="small"></el-input>
+            <span class="text">教师:</span>
+            <el-input v-model="myTeacher" class="mt-input" size="small"></el-input>
+            <el-button type="success" icon="el-icon-search" size="small" @click="checkData">查询</el-button>
+            <el-button type="warning" icon="el-icon-refresh" size="small" @click="resetData">重置</el-button>
+          </div>
+
+        </template>
         <template slot-scope="row" >
           <el-button style="font-size: 13px" type="text" @click="toAdd(row.rowData)">新增</el-button>
           <el-button style="font-size: 13px" type="text" @click="toEdit(row.rowData)">编辑</el-button>
@@ -33,6 +52,23 @@
     },
     data() {
       return {
+        siteList:[
+          {
+            value:'A栋1楼103',
+          },
+          {
+            value:'C栋3楼304',
+          },
+          {
+            value:'B栋2楼202',
+          },
+          {
+            value:'A栋3楼303',
+          },
+        ],
+        mySite:'',
+        myCourse:'',
+        myTeacher:'',
         TitleListLin:[
 
           {
@@ -80,18 +116,35 @@
       this.selectPage()
     },
     methods:{
+      checkData() {
+        this.selectPage()
+      },
+      resetData() {
+        this.myTeacher = ""
+        this.myCourse = ""
+        this.mySite = ""
+        this.selectPage()
+      },
       selectPage() {
         let data = {
-          teacher: "",
-          course: "",
-          site: "",
+          teacher: this.myTeacher,
+          course: this.myCourse,
+          site: this.mySite,
         }
         inquireStatisticalAnalysis(data).then(res=>{
-          let data = res
-          data.forEach(item=> {
-            item.rate = item.rate + "%"
-          })
-          this.tableDataLin = data
+
+          if(res instanceof Array) {
+            let data = res
+            data.forEach(item=> {
+              item.rate = item.rate + "%"
+            })
+            this.tableDataLin = data
+          }
+          else {
+            this.tableDataLin = []
+          }
+
+
         }).catch(err => {
           console.log(err)
         })
@@ -131,7 +184,16 @@
 </script>
 
 <style scoped lang="scss">
-
-
+  .my-form {
+    padding-left: 10px;
+    .text {
+      color: #979696;
+      margin-right: 10px;
+    }
+    .mt-input {
+      width: 200px;
+      margin-right: 10px;
+    }
+  }
 </style>
 

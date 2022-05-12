@@ -15,51 +15,60 @@
     系统设置包括：个人中心 personalCenter，修改密码 changePassword。    <br/>-->
 
     <div class="my-home-body">
+
       <div class="home-top">
         <div class="home-top-left">
+          <div class="home-top-left-title">
+            公共课查询
+          </div>
           <el-table
             height="100%"
             :data="tableData"
             style="width: 100%;overflow: auto">
             <el-table-column
-              prop="date"
-              label="日期"
+              prop="site"
+              label="地点"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="name"
-              label="姓名"
+              prop="course"
+              label="课程"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="address"
-              label="地址">
+              prop="teacher"
+              label="教师">
             </el-table-column>
           </el-table>
         </div>
-        <div class="home-bottom-left">
+        <div class="home-top-right">
+          <div class="home-top-right-title">
+            考勤查询
+          </div>
           <el-table
             height="100%"
-            :data="tableData"
+            :data="tableData2"
             style="width: 100%;overflow: auto">
             <el-table-column
-              prop="date"
-              label="日期"
+              prop="teacher"
+              label="教师"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="name"
-              label="姓名"
+              prop="course"
+              label="课程"
               width="180">
             </el-table-column>
             <el-table-column
-              prop="address"
-              label="地址">
+              prop="rate"
+              label="考勤率">
             </el-table-column>
           </el-table>
         </div>
       </div>
+
       <div class="home-bottom">
+        <div class="home-bottom-title" >考勤排名</div>
         <div class="myHistogram" id="histogram">
 
         </div>
@@ -70,8 +79,8 @@
 
 <script>
   import {
-    inquireManagement, inquireStatisticalAnalysis,
-    list
+    inquireManagement, // 公共课查询
+    inquireStatisticalAnalysis, // 统计分析
   } from "@/network/API/appApi"
   export default {
     name: "home",
@@ -116,6 +125,7 @@
             address: '上海市普陀区金沙江路 1516 弄'
           },
         ],
+        tableData2:[],
         getHistogramData:{
           tooltip: {
             trigger: 'axis',
@@ -210,6 +220,14 @@
           course: "",
           site: "",
         }
+
+        // 公共课查询
+        inquireManagement(data).then(res=>{
+          this.tableData = res
+        }).catch(err => {
+          console.log(err)
+        })
+        // 统计分析
         inquireStatisticalAnalysis(data).then(res=>{
           let arr = res
 
@@ -227,6 +245,15 @@
           })
           // 绘制柱状图
           this.getHistogram()
+
+          // 给表格的考勤率改变格式
+          let myArr = res
+          myArr.forEach(e=> {
+            e.rate = e.rate + '%'
+          })
+          this.tableData2 = myArr
+
+
 
 
         }).catch(err => {
@@ -267,20 +294,36 @@
 
         .home-top-left {
           width: 50%;
-          height: 100%;
+          height: calc(100% - 50px);
+
           /*background-color: greenyellow;*/
           border-right: 3px solid rgb(19, 89, 158);
           padding: 10px;
           box-sizing: border-box;
           /*overflow: auto*/
+          .home-top-left-title {
+            color: #2c73e2;
+            font-size: 24px;
+            font-weight: bold;
+            margin:10px 0;
+            height: 30px;
+          }
 
         }
-        .home-bottom-left {
+        .home-top-right {
           width: 50%;
-          height: 100%;
+          height: calc(100% - 50px);
+
           /*background-color: deepskyblue;*/
           padding: 10px;
           box-sizing: border-box;
+          .home-top-right-title {
+            color: #2c73e2;
+            font-size: 24px;
+            font-weight: bold;
+            margin:10px 0;
+            height: 30px;
+          }
 
         }
       }
@@ -288,11 +331,21 @@
         width: 100%;
         height: 50%;
         /*background-color: teal;*/
-        padding: 10px 10px 10px 50px;
+        padding: 10px 10px 10px 20px;
         box-sizing: border-box;
+        .home-bottom-title {
+          color: #2c73e2;
+          font-size: 24px;
+          font-weight: bold;
+          margin:10px 0;
+          height: 30px;
+        }
         .myHistogram {
+          /*overflow-x: auto;*/
           width: 100%;
-          height: 100%;
+          /*height: calc(100% - 50px);*/
+          height: calc(100% - 50px);
+          padding-left: 10px;
         }
 
       }
