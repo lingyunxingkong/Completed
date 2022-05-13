@@ -37,36 +37,74 @@
         </template>
       </zljTable>
     </div>
-    <el-dialog title="新增" :visible.sync="visible">
-      <el-form :inline="true" :rules="rules" label-position="left" v-model="confirm" label-width="80px">
-        <el-form-item label="上课时间" style="width: 40%">
-          <el-input v-model="confirm.time"></el-input>
+    <el-dialog title="预定" :visible.sync="visible">
+      <el-form :inline="true" :rules="myRule" ref="myForm" label-position="left":model="confirm" label-width="80px">
+        <el-form-item label="上课时间" style="width: 40%" prop="time">
+
+          <el-date-picker
+            style="display: inline-block;width: 200px;"
+            v-model="confirm.time"
+            type="datetime"
+            placeholder="选择日期时间"
+            @change="myDateTime"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            default-time="12:00:00">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="上课地点" style="width: 40%">
-          <el-input v-model="confirm.site"></el-input>
+        <el-form-item label="上课地点" style="width: 40%" prop="site">
+          <el-select v-model="confirm.site" style="width: 200px;" clearable placeholder="请选择">
+            <el-option
+              v-for="item in siteList"
+              :key="item.value"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="课程名称" style="width: 40%">
-          <el-input v-model="confirm.course"></el-input>
+        <el-form-item label="课程名称" style="width: 40%" prop="course">
+          <el-input style="width: 200px;" v-model="confirm.course"></el-input>
         </el-form-item>
-        <el-form-item label="老师" style="width: 40%">
-          <el-input v-model="confirm.teacher"></el-input>
+        <el-form-item label="老师" style="width: 40%" prop="teacher">
+          <el-input style="width: 200px;" v-model="confirm.teacher"></el-input>
         </el-form-item>
-        <el-form-item label="签到状态" style="width: 40%">
-          <el-input v-model="confirm.status"></el-input>
+        <el-form-item label="签到状态" style="width: 40%" prop="status">
+          <el-select v-model="confirm.status" style="width: 200px;" placeholder="请选择">
+            <el-option
+              v-for="item in statusList"
+              :key="item.id"
+              :value="item.id"
+              :label="item.value"
+              disabled
+            >
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="班级" style="width: 40%">
-          <el-input v-model="confirm.class"></el-input>
+        <el-form-item label="班级" style="width: 40%" prop="class">
+
+          <el-select v-model="confirm.class" style="width: 200px;" clearable placeholder="请选择">
+            <el-option
+              v-for="item in classList"
+              :key="item.value"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="院系" style="width: 40%">
-          <el-input v-model="confirm.faculty"></el-input>
+        <el-form-item label="院系" style="width: 40%" prop="faculty">
+
+          <el-select v-model="confirm.faculty" style="width: 200px;" clearable placeholder="请选择">
+            <el-option
+              v-for="item in facultyList"
+              :key="item.value"
+              :value="item.value">
+            </el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="上课人数" style="width: 40%">
-          <el-input v-model="confirm.num"></el-input>
+        <el-form-item label="上课人数" style="width: 40%" prop="num">
+          <el-input style="width: 200px;" v-model.number="confirm.num"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-          <el-button @click="visible = false">取 消</el-button>
-          <el-button type="primary" @click="visible = false">确 定</el-button>
+          <el-button @click="addCancel('myForm')">取 消</el-button>
+          <el-button type="primary" @click="addSure('myForm')">确 定</el-button>
         </span>
     </el-dialog>
   </div>
@@ -74,7 +112,8 @@
 
 <script>
   import {
-    inquireManagement, // 公共课管理
+    inquireManagement, // 公共课管理-查询
+    addManage, // 公共课管理-新增
   } from "@/network/API/appApi"
   import zljTable from "@/components/zlj-table"
   export default {
@@ -84,6 +123,8 @@
     },
     data() {
       return {
+        // 预定的当前项
+        currentItem:{},
         siteList:[
           {
             value:'A栋2楼204',
@@ -96,6 +137,46 @@
           },
           {
             value:'B栋2楼202',
+          },
+        ],
+        classList:[
+          {
+            value:'计算机1801班',
+          },
+          {
+            value:'物联网1901班',
+          },
+          {
+            value:'大数据2001班',
+          },
+          {
+            value:'人工智能1801班',
+          },
+
+        ],
+        facultyList:[
+          {
+            value:'计算机学院',
+          },
+          {
+            value:'航空学院',
+          },
+          {
+            value:'物理学院',
+          },
+          {
+            value:'智能制造学院',
+          },
+
+        ],
+        statusList:[
+          {
+            id:'0',
+            value:'未签到'
+          },
+          {
+            id:'1',
+            value:'已签到'
           },
         ],
         mySite:'',
@@ -156,19 +237,39 @@
           site:'',
           course:'',
           teacher:'',
-          status:'',
+          status:'0',
           class:'',
           faculty:'',
           num:'',
         },
-        rules: {
+        myRule: {
           time: [
-            {required: true, message: '请输入活动名称', trigger: 'blur'},
+            {required: true, message: '请选择上课时间', trigger: 'change'},
             // {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
           ],
           site: [
-            {required: true, message: '请选择活动区域', trigger: 'change'}
+            {required: true, message: '请选择上课地点', trigger: 'change'}
           ],
+          course: [
+            {required: true, message: '请输入课程名称', trigger: 'blur'}
+          ],
+          teacher: [
+            {required: true, message: '请输入教师名称', trigger: 'blur'}
+          ],
+          status: [
+            {required: true, message: '请选择签到状态', trigger: 'change'}
+          ],
+          class: [
+            {required: true, message: '请选择班级', trigger: 'change'}
+          ],
+          faculty: [
+            {required: true, message: '请选择院系', trigger: 'change'}
+          ],
+          num: [
+            {required: true, message: '请输入上课人数', trigger: 'blur'},
+            { type: 'number', message: '上课人数必须为数字值'}
+          ],
+
         }
       }
     },
@@ -228,6 +329,60 @@
 
     },
     methods:{
+      myDateTime(item) {
+        this.confirm.time = item
+      },
+      // 预定取消
+      addCancel(formName) {
+        this.confirm = {
+          time:'',
+          site:'',
+          course:'',
+          teacher:'',
+          status:'',
+          class:'',
+          faculty:'',
+          num:'',
+        }
+        this.$refs[formName].resetFields();
+        this.visible = false
+      },
+      // 预定确定
+      addSure(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            // alert('submit!');
+            let data = this.confirm
+            addManage(data).then(res=>{
+              if(res == '插入数据成功') {
+                this.$message({
+                  type:'success',
+                  message:'预定成功',
+                })
+                this.confirm = {
+                  time:'',
+                  site:'',
+                  course:'',
+                  teacher:'',
+                  status:'',
+                  class:'',
+                  faculty:'',
+                  num:'',
+                }
+                this.selectPage()
+                this.visible = false
+              }
+
+            }).catch(err => {
+              console.log(err)
+            })
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+
+      },
       checkData() {
         this.selectPage()
       },
@@ -245,7 +400,11 @@
         }
         inquireManagement(data).then(res=>{
           if(res instanceof Array) {
-            this.tableDataLin = res
+            let arr = res
+            arr.forEach(i=> {
+              i.num = Number(i.num)
+            })
+            this.tableDataLin = arr
           }
           else {
             this.tableDataLin = []
@@ -256,11 +415,9 @@
       },
 
 
-      // 新增
-      toAdd() {
-        let data = {
-          name:'张林健',
-        }
+      // 预定
+      toAdd(item) {
+        this.currentItem = item
         this.visible = true
       },
       // 编辑

@@ -22,7 +22,7 @@
           fontSize: '14px',
           textAlign: 'center'
         }"
-        :height="height"
+        :height="height+'%'"
         @selection-change="handleSelectionChange"
       >
         <el-table-column v-for="item in titleList" :width="item.width" :label="item.key" :key="item.prop" show-overflow-tooltip :fixed="item.fix">
@@ -63,6 +63,7 @@
     props: {
       height:{
         type:Number,
+        default: 100,
       },
       titleList: {
         type: Array,
@@ -124,7 +125,7 @@
       },
       isShowPagination: {
         type: Boolean,
-        default: true
+        default: false,
       }
     },
     data() {
@@ -185,6 +186,7 @@
       align-items: center;
     }
     .bottom {
+      /*overflow-y: scroll;*/
       margin-top: 10px;
       /*margin-bottom: 10px;*/
       width: calc(100vw - 250px - 20px - 20px);
