@@ -32,7 +32,8 @@
 
         </template>
         <template slot-scope="row" >
-          <el-button style="font-size: 13px" type="text" @click="toAdd(row.rowData)">签到</el-button>
+          <el-button v-if="row.rowData.status === '未签到'" style="font-size: 13px;color: #e2795e" type="text" @click="toAdd(row.rowData)">签到</el-button>
+          <el-button v-if="row.rowData.status === '已签到'" style="font-size: 13px;color: #1dcca1" type="text" @click="mySignAgain">已签到</el-button>
 
         </template>
       </zljTable>
@@ -42,8 +43,8 @@
 
 <script>
   import {
-    inquireAttendance, // 考勤管理
-    inquireManagement, // 公共课管理
+    inquireManagement, // 公共课管理-查询
+    signIn, // 公共课管理-签到
   } from "@/network/API/appApi"
   import zljTable from "@/components/zlj-table"
   export default {
@@ -108,7 +109,12 @@
       this.selectPage()
     },
     methods:{
-
+      mySignAgain() {
+        this.$message({
+          type:"warning",
+          message:'请勿重复签到',
+        })
+      },
       checkData() {
         this.selectPage()
       },
@@ -126,7 +132,17 @@
         }
         inquireManagement(data).then(res=>{
           if(res instanceof Array) {
-            this.tableDataLin = res
+
+            let arr = res
+            arr.forEach(i=> {
+              if(i.status === '0') {
+                i.status = '未签到'
+              }
+              else {
+                i.status = '已签到'
+              }
+            })
+            this.tableDataLin = arr
           }
           else {
             this.tableDataLin = []
@@ -137,11 +153,29 @@
       },
 
       // 新增
-      toAdd() {
+      toAdd(item) {
         let data = {
-          name:'张林健',
+          id:item.id,
+          status:'1',
         }
-        this.visible = true
+        signIn(data).then(res=>{
+          if(res == '修改数据成功') {
+            this.$message({
+              type:"success",
+              message:'签到成功',
+            })
+            this.selectPage()
+          }
+          else {
+            this.$message({
+              type:"warning",
+              message:'签到失败',
+            })
+          }
+
+        }).catch(err => {
+          console.log(err)
+        })
       },
       // 编辑
       toEdit() {

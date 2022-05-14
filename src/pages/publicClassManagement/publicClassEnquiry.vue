@@ -247,7 +247,17 @@
         }
         inquireManagement(data).then(res=>{
           if(res instanceof Array) {
-            this.tableDataLin = res
+            let arr = res
+            arr.forEach(i=> {
+              i.num = Number(i.num)
+              if(i.status === '0') {
+                i.status = '未签到'
+              }
+              else {
+                i.status = '已签到'
+              }
+            })
+            this.tableDataLin = arr
           }
           else {
             this.tableDataLin = []

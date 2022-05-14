@@ -344,8 +344,11 @@
           faculty:'',
           num:'',
         }
-        this.$refs[formName].resetFields();
+        // this.$refs[formName].resetFields();
         this.visible = false
+        this.selectPage()
+
+
       },
       // 预定确定
       addSure(formName) {
@@ -403,6 +406,12 @@
             let arr = res
             arr.forEach(i=> {
               i.num = Number(i.num)
+              if(i.status === '0') {
+                i.status = '未签到'
+              }
+              else {
+                i.status = '已签到'
+              }
             })
             this.tableDataLin = arr
           }
