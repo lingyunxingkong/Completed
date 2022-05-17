@@ -1,7 +1,7 @@
 <template>
   <div id="app">
 <!--    主页面-->
-    <div>
+    <div v-if="!$route.meta.auth">
       <!--导航栏-->
       <myHeader />
       <!--主题-->
@@ -14,6 +14,10 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <router-view></router-view>
+    </div>
+
 
   </div>
 </template>
@@ -27,7 +31,12 @@ export default {
   components: {
     myHeader,
     myMenu
-  }
+  },
+  data() {
+    return {
+      loginTrue:true,
+    }
+  },
 }
 </script>
 

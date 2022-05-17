@@ -9,6 +9,7 @@
     </div>
     <div class="right">
       您好！张林健
+      <el-button type="primary" circle size="small" @click="back">退出</el-button>
     </div>
   </div>
 </template>
@@ -23,6 +24,11 @@
     mounted() {
     },
     methods:{
+      back() {
+        // 1.清空token
+        // localStorage.removeItem('token')
+        this.$router.push('/login')
+      },
     },
   }
 </script>
@@ -64,7 +70,7 @@
       height: 100%;
       color: white;
       display: flex;
-      justify-content: center;
+      justify-content: space-around;
       align-items: center;
       /*background-color: blue;*/
     }

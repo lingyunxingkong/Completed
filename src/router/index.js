@@ -3,14 +3,21 @@ import Vue from 'vue'
 
 import home from '../../src/pages/home/home'
 
-
+import login from '../../src/pages/login/login'
 import Router from 'vue-router'
 Vue.use(Router)
 const router = new Router({
     routes: [
-        { path: '/', redirect: '/home' },
+        { path: '/', redirect: '/login' },
+        { path: '/login', component: login,
+            meta: {
+                title: '',
+                auth: true
+            }
+        },
         // { path: '/aside', component: MyAside },
-        { path: '/home', component: home },
+        { path: '/home', component: home,},
+
 
         // { path: '/aside', component: MyAside },
         // { path: '/header', component: MyHeader },
