@@ -244,11 +244,11 @@
         },
         myRule: {
           time: [
-            {required: true, message: '请选择上课时间', trigger: 'change'},
+            {required: true, message: '请选择上课时间', trigger: 'blur'},
             // {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
           ],
           site: [
-            {required: true, message: '请选择上课地点', trigger: 'change'}
+            {required: true, message: '请选择上课地点', trigger: 'blur'}
           ],
           course: [
             {required: true, message: '请输入课程名称', trigger: 'blur'}
@@ -257,13 +257,13 @@
             {required: true, message: '请输入教师名称', trigger: 'blur'}
           ],
           status: [
-            {required: true, message: '请选择签到状态', trigger: 'change'}
+            {required: true, message: '请选择签到状态', trigger: 'blur'}
           ],
           class: [
-            {required: true, message: '请选择班级', trigger: 'change'}
+            {required: true, message: '请选择班级', trigger: 'blur'}
           ],
           faculty: [
-            {required: true, message: '请选择院系', trigger: 'change'}
+            {required: true, message: '请选择院系', trigger: 'blur'}
           ],
           num: [
             {required: true, message: '请输入上课人数', trigger: 'blur'},
@@ -339,7 +339,7 @@
           site:'',
           course:'',
           teacher:'',
-          status:'',
+          status:'0',
           class:'',
           faculty:'',
           num:'',
@@ -367,7 +367,7 @@
                   site:'',
                   course:'',
                   teacher:'',
-                  status:'',
+                  status:'0',
                   class:'',
                   faculty:'',
                   num:'',
@@ -427,6 +427,16 @@
       // 预定
       toAdd(item) {
         this.currentItem = item
+        this.confirm = {
+          time:'',
+          site:'',
+          course:'',
+          teacher:'',
+          status:'0',
+          class:'',
+          faculty:'',
+          num:'',
+        }
         this.visible = true
       },
       // 编辑

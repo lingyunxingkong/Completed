@@ -25,9 +25,19 @@
     },
     methods:{
       back() {
-        // 1.清空token
-        localStorage.removeItem('user')
-        this.$router.push('/login')
+        this.$confirm('是否退出系统？', '提示', {
+          // confirmButtonClass: 'el-button--warning'
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(()=> {
+          // 1.清空token
+          localStorage.removeItem('user')
+          this.$router.push('/login')
+        }).catch(err => {
+          console.log(err)
+        })
+
       },
     },
   }

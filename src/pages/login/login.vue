@@ -9,10 +9,10 @@
       </div>
       <div class="login-box">
         <span>密码：</span>
-        <el-input class="login-input" v-model="password"></el-input>
+        <el-input class="login-input" type="password" show-password v-model="password"></el-input>
       </div>
       <div class="login-btn">
-        <el-button type="primary" @click="login">登录</el-button>
+        <el-button type="primary"  @click="login">登录</el-button>
       </div>
 
     </div>
@@ -50,6 +50,20 @@
         })
       },
       login() {
+        if(this.account == '') {
+          this.$message({
+            type:'warning',
+            message:'请输入账号',
+          })
+          return
+        }
+        if(this.password == '') {
+          this.$message({
+            type:'warning',
+            message:'请输入密码',
+          })
+          return
+        }
         let arr = this.myArrData
         let myTrue = arr.find(item=> {
           return item.account == this.account
