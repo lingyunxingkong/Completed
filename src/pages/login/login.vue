@@ -5,11 +5,11 @@
       <div class="login-text">登录</div>
       <div class="login-box">
         <span>账号：</span>
-        <el-input class="login-input"></el-input>
+        <el-input class="login-input" v-model="account"></el-input>
       </div>
       <div class="login-box">
         <span>密码：</span>
-        <el-input class="login-input"></el-input>
+        <el-input class="login-input" v-model="password"></el-input>
       </div>
       <div class="login-btn">
         <el-button type="primary" @click="login">登录</el-button>
@@ -21,27 +21,59 @@
 </template>
 
 <script>
+  import {inquirePersonalCenter} from "@/network/API/appApi";
+
   export default {
     name: "",
     data() {
       return {
+        myArrData:[],
+        account:'',
+        password:'',
       }
     },
     mounted() {
+      this.selectPage()
     },
     methods:{
+      selectPage() {
+        let data = {}
+        inquirePersonalCenter(data).then(res=>{
+          if(res instanceof Array) {
+            this.myArrData = res
+          }
+          else {
+            this.myArrData = []
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      },
       login() {
-        this.$router.push('/home')
-        /*if (this.username === 'admin' && this.password === '123456') {
-          // 登录成功
-          // 1，存储token
-          localStorage.setItem('token', 'token')
-          // 2.跳转到后台主页
-          this.$router.push('/home')
-        } else {
-          // 登录失败
-          localStorage.removeItem('token')
-        }*/
+        let arr = this.myArrData
+        let myTrue = arr.find(item=> {
+          return item.account == this.account
+        })
+        if(myTrue) {
+          if(myTrue.password == this.password) {
+            // 1，存储token
+            localStorage.setItem('user', JSON.stringify(myTrue))
+            this.$router.push('/home')
+          }
+          else {
+            this.$message({
+              type:'warning',
+              message:'密码错误',
+            })
+
+          }
+        }
+        else {
+          this.$message({
+            type:'warning',
+            message:'账号不存在',
+          })
+        }
       }
     },
   }

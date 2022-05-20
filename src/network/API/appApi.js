@@ -39,5 +39,10 @@ export const deleteStatisticalAnalysis = (data) => request.post('/statisticalAna
 
 
 // 个人中心
+// 查询
 export const inquirePersonalCenter = (data) => request.post('personalCenter/inquirePersonalCenter.php', data,{ 'Authorization': localStorage.getItem('token'),'content-type': 'application/json' })
+// 编辑
+export const editPersonalCenter = (data) => request.post('/personalCenter/editPersonalCenter.php', data,{ 'Authorization': localStorage.getItem('token'),'content-type': 'application/json' })
+// 修改密码
+export const editPassword = (data) => request.post('/personalCenter/editPassword.php', data,{ 'Authorization': localStorage.getItem('token'),'content-type': 'application/json' })
 

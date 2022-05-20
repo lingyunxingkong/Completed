@@ -39,7 +39,7 @@
     </div>
 
     <el-dialog :title="myTitle"  :visible.sync="visible">
-      <el-form :inline="true" :rules="myRule" ref="myForm" label-position="left":model="confirm" label-width="80px">
+      <el-form :inline="true" :rules="myRule" ref="myForm" label-position="left" :model="confirm" label-width="80px">
 
         <el-form-item label="上课地点" style="width: 40%" prop="site">
           <el-select v-model="confirm.site" style="width: 200px;" clearable placeholder="请选择">
@@ -82,7 +82,6 @@
     addStatisticalAnalysis, // 统计分析-新增
     editStatisticalAnalysis, // 统计分析-编辑
     deleteStatisticalAnalysis, // 统计分析-删除
-
   } from "@/network/API/appApi"
   import zljTable from "@/components/zlj-table"
   export default {
@@ -265,7 +264,7 @@
           }
           else {
             this.$message({
-              type:'success',
+              type:'warning',
               message:'新增失败',
             })
           }
@@ -286,7 +285,7 @@
           }
           else {
             this.$message({
-              type:'success',
+              type:'warning',
               message:'编辑失败',
             })
           }

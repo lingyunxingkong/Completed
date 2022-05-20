@@ -26,7 +26,7 @@
     methods:{
       back() {
         // 1.清空token
-        // localStorage.removeItem('token')
+        localStorage.removeItem('user')
         this.$router.push('/login')
       },
     },

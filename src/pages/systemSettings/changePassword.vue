@@ -5,27 +5,30 @@
       <div class="psw-before">
         <iconfont-svg style="margin-right: 10px;margin-left: 5px;" icon="icon-a-jisuanjidiannaokoulingmima" size="38"></iconfont-svg>
         <span style="font-size: 24px;color: rgb(55,55,55)">原始密码：</span>
-        <el-input v-model="oldPsw" clearable class="psw-input" placeholder="请输入原始密码"></el-input>
+        <el-input v-model="oldPsw" type="password" show-password clearable class="psw-input" placeholder="请输入原始密码"></el-input>
       </div>
       <div class="psw-new">
         <iconfont-svg style="margin-right: 10px;margin-left: 5px;" icon="icon-denglu" size="38"></iconfont-svg>
         <span style="font-size: 24px;color: rgb(55,55,55)">最新密码：</span>
-        <el-input v-model="newPsw" clearable class="psw-input" placeholder="请输入最新密码"></el-input>
+        <el-input v-model="newPsw" type="password" show-password clearable class="psw-input" placeholder="请输入最新密码"></el-input>
       </div>
       <div class="psw-again">
         <iconfont-svg style="margin-right: 10px;margin-left: 5px;" icon="icon-bijibendiannao" size="38"></iconfont-svg>
         <span style="font-size: 24px;color: rgb(55,55,55)">再次确认：</span>
-        <el-input v-model="againPsw" clearable class="psw-input" placeholder="请再次输入最新密码"></el-input>
+        <el-input v-model="againPsw" type="password" show-password clearable class="psw-input" placeholder="请再次输入最新密码"></el-input>
       </div>
       <div class="psw-btn">
-        <el-button type="success" icon="el-icon-check">提交</el-button>
-        <el-button type="warning" icon="el-icon-refresh">重置</el-button>
+        <el-button type="success" icon="el-icon-check" @click="myCheck">提交</el-button>
+        <el-button type="warning" icon="el-icon-refresh" @click="reset">重置</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import {
+    editPassword, // 个人中心-修改密码
+  } from "@/network/API/appApi"
   export default {
     name: "changePassword",
     data() {
@@ -33,11 +36,84 @@
         oldPsw:'',
         newPsw:'',
         againPsw:'',
+        userInfo:'',
       }
     },
     mounted() {
+      this.userInfo = JSON.parse(localStorage.getItem('user'))
     },
     methods:{
+      reset() {
+        this.oldPsw = ''
+        this.newPsw = ''
+        this.againPsw = ''
+      },
+      myCheck() {
+        if(this.oldPsw == '') {
+          this.$message({
+            type:'warning',
+            message:'请输入原始密码',
+          })
+          return
+        }
+        if(this.newPsw == '') {
+          this.$message({
+            type:'warning',
+            message:'请输入最新密码',
+          })
+          return
+        }
+        if(this.againPsw == '') {
+          this.$message({
+            type:'warning',
+            message:'请再次输入最新密码',
+          })
+          return
+        }
+        if(this.oldPsw != this.userInfo.password) {
+          this.$message({
+            type:'warning',
+            message:'原始密码错误',
+          })
+        }
+        else if(this.oldPsw == this.userInfo.password){
+          if(this.newPsw != this.againPsw) {
+            this.$message({
+              type:'warning',
+              message:'两次输入的最新密码不一致,请重试',
+            })
+          }
+
+          else {
+            this.updataPassword()
+          }
+        }
+
+      },
+      updataPassword() {
+        let data = {
+          id: this.userInfo.id,
+          password: this.newPsw,
+        }
+        editPassword(data).then(res=>{
+          if(res == '修改数据成功') {
+            this.$message({
+              type:'success',
+              message:'修改成功,请重新登录',
+            })
+            localStorage.removeItem('user')
+            this.$router.push('/login')
+          }
+          else {
+            this.$message({
+              type:'warning',
+              message:'修改失败',
+            })
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      },
     },
   }
 </script>
